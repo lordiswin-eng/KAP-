@@ -5,14 +5,16 @@ const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
-const 8911032066 = process.env.CHAT_ID;
 
-const bot = new TelegramBot(8924477452:AAEF38jB72TaUd41kbgsnV-r6RjkAaotcTM, { polling: false });
+// Token ve Chat ID bilgileri doğrudan eklendi
+const TELEGRAM_TOKEN = '8924477452:AAEF38jB72TaUd41kbgsnV-r6RjkAaotcTM';
+const CHAT_ID = '8911032066';
 
-// Render health-check veya ana sayfa kontrolü
+const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: false });
+
+// Render canlılık kontrolü (Health check)
 app.get('/', (req, res) => {
-  res.send('KAP Telegram Bot Servisi Çalışıyor 🚀');
+  res.send('KAP Telegram Bot Servisi Aktif ve Çalışıyor 🚀');
 });
 
 // GitHub Webhook Endpoint
@@ -20,29 +22,29 @@ app.post('/webhook', (req, res) => {
   const event = req.headers['x-github-event'];
   const payload = req.body;
 
-  // Örnek 1: GitHub Release / Bildirim Yayınlandığında
+  // 1. Olay: GitHub Release / Bildirim Yayınlandığında
   if (event === 'release' && payload.action === 'published') {
     const release = payload.release;
     const repoName = payload.repository.name;
 
     const message = 
-`📢 *YENİ KAP BİLDİRİMİ / DUYURU*
+`📢 *YENİ KAP BİLDİRİMİ*
 
-🏢 *Şirket/Proje:* ${repoName}
+🏢 *Kaynak/Proje:* ${repoName}
 📌 *Başlık:* ${release.name || release.tag_name}
 👤 *Yayınlayan:* ${release.author.login}
 
-📝 *Özet:*
-${release.body || 'İçerik girilmedi.'}
+📝 *Açıklama:*
+${release.body || 'İçerik belirtilmedi.'}
 
-🔗 [Bildirim Detayını İncele](${release.html_url})`;
+🔗 [Bildirimi Görüntüle](${release.html_url})`;
 
     bot.sendMessage(CHAT_ID, message, { parse_mode: 'Markdown' })
-      .then(() => console.log('Telegram bildirimi gönderildi.'))
-      .catch((err) => console.error('Telegram hatası:', err));
+      .then(() => console.log('Telegram bildirimi başarıyla gönderildi.'))
+      .catch((err) => console.error('Telegram gönderim hatası:', err));
   }
 
-  // Örnek 2: GitHub Commit / Push Olayında
+  // 2. Olay: GitHub Commit / Push Yapıldığında
   if (event === 'push') {
     const commits = payload.commits;
     if (commits && commits.length > 0) {
@@ -53,12 +55,14 @@ ${release.body || 'İçerik girilmedi.'}
 `📢 *YENİ KAP BİLDİRİMİ (Push)*
 
 🏢 *Kaynak:* ${repoName}
-✍️ *Yazar:* ${latestCommit.author.name}
+✍️ *Gönderen:* ${latestCommit.author.name}
 💬 *Mesaj:* ${latestCommit.message}
 
-🔗 [Commit Detayı](${latestCommit.url})`;
+🔗 [Detayları İncele](${latestCommit.url})`;
 
-      bot.sendMessage(CHAT_ID, message, { parse_mode: 'Markdown' });
+      bot.sendMessage(CHAT_ID, message, { parse_mode: 'Markdown' })
+        .then(() => console.log('Push bildirimi gönderildi.'))
+        .catch((err) => console.error('Telegram gönderim hatası:', err));
     }
   }
 
@@ -66,5 +70,5 @@ ${release.body || 'İçerik girilmedi.'}
 });
 
 app.listen(PORT, () => {
-  console.log(`Sunucu ${PORT} portunda dinleniyor.`);
+  console.log(`Sunucu ${PORT} portunda başarıyla başlatıldı.`);
 });

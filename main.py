@@ -105,7 +105,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ---------------------------------------------------------
 def main():
     # Telegram Bot Token'ı Render Environment Variable üzerinden alınır
-    bot_token = os.environ.get("BOT_TOKEN")
+    bot_token = os.environ.get("8924477452:AAEF38jB72TaUd41kbgsnV-r6RjkAaotcTM")
     
     if not bot_token:
         print("HATA: BOT_TOKEN çevre değişkeni bulunamadı!")

@@ -6,9 +6,9 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
-const CHAT_ID = process.env.CHAT_ID;
+const 8911032066 = process.env.CHAT_ID;
 
-const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: false });
+const bot = new TelegramBot(8924477452:AAEF38jB72TaUd41kbgsnV-r6RjkAaotcTM, { polling: false });
 
 // Render health-check veya ana sayfa kontrolü
 app.get('/', (req, res) => {
